@@ -30,7 +30,7 @@ def signin():
             email = request.form['email']
             password = request.form['password']
             login_session['user'] = auth.sign_in_with_email_and_password(email,password)
-            return redirect(url_for('home_page'))
+            return redirect(url_for('home'))
     except:
         return render_template('signin.html')
     return render_template('signin.html')
@@ -43,33 +43,40 @@ def signup():
             password = request.form['password']
             username = request.form['username']
             bio = request.form['bio']
+            UID = login_session['user']['localId']
+            info = {'username':username , 'bio': bio}
+            db.child('all_users').child(UID).set(info)
             login_session['user'] = auth.create_user_with_email_and_password(email,password)
             return redirect(url_for('home'))
-    except:
+    except Exception as e:
+        print(e)
         return render_template('signup.html')
     return render_template('signup.html')
 
-
 @app.route('/home_page', methods=['GET', 'POST'])
 def home():
-    try:
-        if request.method == "POST":
-            title = request.form['title']
-            optional = request.form['optional']
-            if request.method == "POST":
-                ingredients = request.form['ingredients']
-            if request.method == 'POST':
-                steps = request.method['steps']
-            return redirect(url_for('home'))
-    except:
-        return render_template("home.html")
+    UID = login_session['user']['localId']
+    if request.method == "POST":
+        title = request.form['title']
+        optional = request.form['optional']
+        x = request.form['ingredients']
+        ste = request.form['steps']
+        steps = ste.split(',')
+        ingredients = x.split()
+        recipe = {'title':title , 'optional' : optional , 'ingredients' : ingredients , 'steps' : steps, "uid":UID}
+        db.child('Recipes').push(recipe)
+        return redirect(url_for('home'))
+    else:
+        username = db.child('all_users').child(UID).get().val()
+        print(UID, db.child('all_users').get().val())
+        #name = username['username']
+        name = None
+        recipes = db.child('Recipes').get().val()
+        return render_template('home.html', username = name , recipes = recipes)
 
-    return render_template('home.html', st = steps , ing = ingredients)
-
-
-
-
-
+@app.route('/profile')
+def profile():
+    return render_template('profile.html') 
 
 #Code goes above here
 
