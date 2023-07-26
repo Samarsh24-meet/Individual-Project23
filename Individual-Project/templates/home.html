@@ -13,7 +13,7 @@
         <div>
             <h3>Check out your profile!!</h3>
         </div>
-        {% if s == True %}
+
         <form action='/home_page' method="POST">
             <div>
                 <input type="text" name="username" placeholder="your name" required>
@@ -38,13 +38,11 @@
             </div>
             <input type="submit">
         </form>
-        {% endif %}
 
         <div>
         <h1>*Recent Recipes*</h1>
             {% for i in recipes %}
             <div>
-                <h2> The cook: {{username}} </h2>
                 <h3>Title: {{recipes[i]['title']}}</h3>
                 <h4>Type of food: {{recipes[i]['optional']}}</h4>
                 <h4> ingredients:

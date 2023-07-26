@@ -46,30 +46,31 @@ def signup():
             info = {'username':username }
             db.child('Users').child(UID).set(info)
             login_session['user'] = auth.create_user_with_email_and_password(email,password)
-            login_session['user'] = auth.sign_in_with_email_and_password(email,password)
             return redirect(url_for('home'))
     except Exception as e:
         print(e)
         return render_template('signup.html')
     return render_template('signup.html')
 
+
 @app.route('/home_page', methods=['GET', 'POST'])
 def home():
     UID = login_session['user']['localId']
+    recipes = None  
     if request.method == "POST":
         title = request.form['title']
         optional = request.form['optional']
         x = request.form['ingredients']
         ste = request.form['steps']
-        name = request.form['username']
         steps = ste.split(',')
         ingredients = x.split()
-        recipe = {'title':title , 'optional' : optional , 'ingredients' : ingredients , 'steps' : steps, "uid":UID}
+        recipe = {'title': title, 'optional': optional, 'ingredients': ingredients, 'steps': steps, "uid": UID}
         db.child('Recipes').push(recipe)
+        return redirect(url_for('home'))
+    else:
         recipes = db.child('Recipes').get().val()
-        return render_template('home.html' , username = name , recipes = recipes, s= False)
-    return render_template('home.html', s = True)
-#Code goes above here
+    return render_template('home.html', recipes=recipes)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
