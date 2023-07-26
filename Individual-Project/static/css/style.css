@@ -1,0 +1,12 @@
+body {
+  /* Replace 'path/to/your/image.jpg' with the actual path to your image */
+  background-image: url('https://i.pinimg.com/736x/1f/2e/d7/1f2ed796410477e1a734a08a516a7c9e.jpg');
+  /* Set the background image to cover the whole viewport */
+  background-size: cover;
+  /* Repeat the background image horizontally and vertically */
+  background-repeat: no-repeat;
+  /* Center the background image */
+  background-position: center center;
+  /* Add a fallback background color in case the image is not available or loading */
+  background-color: #f0f0f0;
+}
